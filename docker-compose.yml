@@ -19,7 +19,7 @@ services:
       DATABASE_URL: "mysql://root:Cuatrovientos25!@db:3306/db_products?serverVersion=8.0.32&charset=utf8mb4"
       APP_ENV: dev
       APP_SECRET: ca252f8a108c77f9c2a25eaed2e83ba5
-      CORS_ALLOW_ORIGIN: "^https?://(localhost|127\\.0\\.0\\.1)(:[0-9]+)?$"
+      CORS_ALLOW_ORIGIN: "https?://localhost:4200"
     depends_on:
       - db
 

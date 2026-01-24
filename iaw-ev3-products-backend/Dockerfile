@@ -17,8 +17,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
+# Copy only composer files first for better caching
+COPY composer.json composer.lock ./
+
+RUN composer install --no-interaction --no-scripts --no-autoloader
+
+# Copy the rest of the application
 COPY . .
 
+# Finish composer installation
 RUN composer install --no-interaction --optimize-autoloader
 
 RUN chown -R www-data:www-data /var/www/html/var
