@@ -31,31 +31,32 @@ export class ProductFormComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.productId = this.route.snapshot.params['id'];
     if (this.productId) {
       this.isEditMode = true;
-      this.productService.getProduct(this.productId).subscribe({
-        next: (product) => this.productForm.patchValue(product),
-        error: (err) => console.error('Error loading product for edit:', err)
-      });
+      try {
+        const product = await this.productService.getProduct(this.productId);
+        this.productForm.patchValue(product);
+      } catch (err) {
+        console.error('Error loading product for edit:', err);
+      }
     }
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.productForm.valid) {
       const product: Product = this.productForm.value;
-      if (this.isEditMode && this.productId) {
-        product.id = this.productId;
-        this.productService.updateProduct(product).subscribe({
-          next: () => this.router.navigate(['/products']),
-          error: (err) => console.error('Error updating product:', err)
-        });
-      } else {
-        this.productService.addProduct(product).subscribe({
-          next: () => this.router.navigate(['/products']),
-          error: (err) => console.error('Error adding product:', err)
-        });
+      try {
+        if (this.isEditMode && this.productId) {
+          product.id = this.productId;
+          await this.productService.updateProduct(product);
+        } else {
+          await this.productService.addProduct(product);
+        }
+        this.router.navigate(['/products']);
+      } catch (err) {
+        console.error('Error saving product:', err);
       }
     }
   }

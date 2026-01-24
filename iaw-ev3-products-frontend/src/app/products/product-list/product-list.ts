@@ -15,12 +15,14 @@ export class ProductListComponent {
   productService = inject(ProductService);
   products = this.productService.products;
 
-  deleteProduct(id: number | undefined): void {
+  async deleteProduct(id: number | undefined): Promise<void> {
     if (id !== undefined) {
-      this.productService.deleteProduct(id).subscribe({
-        next: () => console.log('Product deleted successfully'),
-        error: (err) => console.error('Error deleting product:', err)
-      });
+      try {
+        await this.productService.deleteProduct(id);
+        console.log('Product deleted successfully');
+      } catch (err) {
+        console.error('Error deleting product:', err);
+      }
     }
   }
 }
