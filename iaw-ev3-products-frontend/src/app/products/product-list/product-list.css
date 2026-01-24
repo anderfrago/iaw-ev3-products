@@ -1,0 +1,44 @@
+.product-card {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.product-card h3 {
+  color: #333;
+  margin-top: 0;
+}
+
+.product-card p {
+  color: #666;
+}
+
+.product-card button {
+  margin-right: 10px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+}
+
+.product-card button:hover {
+  background-color: #0056b3;
+}
+
+button[routerLink="/products/new"] {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+button[routerLink="/products/new"]:hover {
+  background-color: #218838;
+}

@@ -1,0 +1,28 @@
+# Symfony specific
+/iaw-ev3-products-backend/bin/.phpunit/
+/iaw-ev3-products-backend/var/
+/iaw-ev3-products-backend/vendor/
+/iaw-ev3-products-backend/composer.lock
+/iaw-ev3-products-backend/.env.local
+/iaw-ev3-products-backend/.env.test.local
+/iaw-ev3-products-backend/public/build/
+/iaw-ev3-products-backend/public/bundles/
+
+# Angular specific
+/iaw-ev3-products-frontend/node_modules/
+/iaw-ev3-products-frontend/dist/
+/iaw-ev3-products-frontend/.angular/cache/
+/iaw-ev3-products-frontend/coverage/
+/iaw-ev3-products-frontend/tmp/
+/iaw-ev3-products-frontend/.env
+
+# General ignores
+.DS_Store
+.env
+.idea/
+.vscode/
+*.log
+*.bak
+*.swp
+*~
+Thumbs.db
