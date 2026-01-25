@@ -13,7 +13,7 @@ services:
       - app-network
 
   backend:
-    build: ./iaw-ev3-products-backend
+    image: anderfrago/iaw-ev3-products-backend:latest
     restart: always
     ports:
       - "8000:80"
@@ -28,7 +28,7 @@ services:
       - app-network
 
   frontend:
-    build: ./iaw-ev3-products-frontend
+    image: anderfrago/iaw-ev3-products-frontend:latest
     restart: always
     ports:
       - "4200:80"
