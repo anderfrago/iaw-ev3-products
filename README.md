@@ -118,25 +118,26 @@ Este proyecto ha sido actualizado para soportar completamente la contenerizació
 1.  **Limpieza de Git:** Se revirtió el merge incorrecto en la rama `main` para asegurar un punto de partida limpio.
 2.  **Configuración del Backend:**
     *   Se creó un `.dockerignore` para excluir `vendor`, `var/cache`, etc.
-    *   Se optimizó el `Dockerfile` de Symfony usando caché de capas para las dependencias de Composer.
+    *   Se optimizó el `Dockerfile` de Symfony.
+    *   **Automatización:** Se añadió un `docker-entrypoint.sh` que ejecuta automáticamente las migraciones de la base de datos y genera datos ficticios (faker) al iniciar el contenedor.
 3.  **Configuración del Frontend:**
     *   Se configuró un `Dockerfile` multi-etapa.
-    *   Se cambió el servidor de Apache a **Nginx** para un mejor soporte de Single Page Applications (SPA).
-    *   Se añadió un archivo `nginx.conf` personalizado para gestionar el enrutamiento de Angular.
+    *   Se utiliza **Nginx** como servidor web y **Reverse Proxy**.
+    *   **Conectividad:** El frontend utiliza rutas relativas (`/api`) delegando en Nginx la resolución de nombres de contenedores Docker (`http://backend:80`).
 4.  **Orquestación con Docker Compose:**
-    *   Se creó un `docker-compose.yml` que levanta la base de datos MySQL, el backend y el frontend, configurando correctamente las variables de entorno y el networking.
+    *   Se simplificó la configuración para que funcione "out-of-the-box" sin necesidad de ejecutar comandos manuales dentro de los contenedores.
 
 ### Ejecución con Docker Compose
 
 Para lanzar la aplicación localmente con Docker Compose:
 
 ```bash
-docker compose up -d
+docker compose up --build -d
 ```
 
 La aplicación estará disponible en:
-*   Frontend: `http://localhost:4200`
-*   Backend: `http://localhost:8000`
+*   Frontend: `http://localhost:4200` (incluye el proxy a la API)
+*   Backend (Directo): `http://localhost:8000/api/products/`
 
 ---
 
