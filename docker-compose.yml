@@ -9,8 +9,7 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-    networks:
-      - app-network
+
 
   backend:
     image: anderfrago/iaw-ev3-products-backend:latest
@@ -24,22 +23,17 @@ services:
       CORS_ALLOW_ORIGIN: "https?://localhost:4200"
     depends_on:
       - db
-    networks:
-      - app-network
+
 
   frontend:
     image: anderfrago/iaw-ev3-products-frontend:latest
     restart: always
     ports:
-      - "4200:80"
+      - "80:80"
     depends_on:
       - backend
-    networks:
-      - app-network
+  
 
-networks:
-  app-network:
-    driver: bridge
 
 volumes:
   db_data:
