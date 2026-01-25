@@ -28,14 +28,18 @@ class GenerateProductsCommand extends Command
     {
         $this
             ->setHelp('This command allows you to generate a specified number of fictitious products for testing purposes.')
+            ->addArgument('count', null, 'Number of products to generate', 10)
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $count = $input->getArgument('count');
 
-        $count = $io->ask('How many products do you want to generate?', 10);
+        if (!$count && $input->isInteractive()) {
+            $count = $io->ask('How many products do you want to generate?', 10);
+        }
 
         if (!is_numeric($count) || $count <= 0) {
             $io->error('Please enter a valid number greater than 0.');
