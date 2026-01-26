@@ -32,7 +32,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # Copy only composer files first for better caching
-COPY composer.json composer.lock ./
+COPY composer.json ./
 
 RUN composer install --no-interaction --no-scripts --no-autoloader
 
