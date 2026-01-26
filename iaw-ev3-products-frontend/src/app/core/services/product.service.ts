@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { AuthService } from './auth.service';
 import { Product } from '../../shared/models/product.model';
 import { environment } from '../../../environments/environment';
 
@@ -8,6 +9,8 @@ import { environment } from '../../../environments/environment';
 export class ProductService {
   private apiUrl = `${environment.apiUrl}/products/`;
   products = signal<Product[]>([]);
+
+  private authService = inject(AuthService);
 
   constructor() {
     this.loadProducts();
@@ -59,7 +62,8 @@ export class ProductService {
       const response = await fetch(this.apiUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.authService.getToken()}`
         },
         body: JSON.stringify(product)
       });
@@ -80,7 +84,8 @@ export class ProductService {
       const response = await fetch(`${this.apiUrl}${product.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.authService.getToken()}`
         },
         body: JSON.stringify(product)
       });
@@ -101,7 +106,10 @@ export class ProductService {
   async deleteProduct(id: number): Promise<void> {
     try {
       const response = await fetch(`${this.apiUrl}${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${this.authService.getToken()}`
+        }
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
