@@ -31,7 +31,7 @@ services:
     build: ./iaw-ev3-products-frontend
     restart: always
     ports:
-      - "4200:80"
+      - "80:80"
     depends_on:
       - backend
     networks:
