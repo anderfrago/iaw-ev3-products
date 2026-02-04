@@ -7,6 +7,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const token = authService.getToken();
 
     if (token) {
+        console.log('AuthInterceptor: Attaching token', token);
         const cloned = req.clone({
             setHeaders: {
                 Authorization: `Bearer ${token}`
@@ -14,6 +15,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         });
         return next(cloned);
     }
+    console.log('AuthInterceptor: No token found');
 
     return next(req);
 };

@@ -1,5 +1,6 @@
 import { Injectable, signal, inject } from '@angular/core';
-import { AuthService } from './auth.service';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { Product } from '../../shared/models/product.model';
 import { environment } from '../../../environments/environment';
 
@@ -10,7 +11,7 @@ export class ProductService {
   private apiUrl = `${environment.apiUrl}/products/`;
   products = signal<Product[]>([]);
 
-  private authService = inject(AuthService);
+  private http = inject(HttpClient);
 
   constructor() {
     this.loadProducts();
@@ -18,11 +19,7 @@ export class ProductService {
 
   private async loadProducts(): Promise<void> {
     try {
-      const response = await fetch(this.apiUrl);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data: Product[] = await response.json();
+      const data = await firstValueFrom(this.http.get<Product[]>(this.apiUrl));
       this.products.set(data);
     } catch (error) {
       this.handleError(error);
@@ -31,26 +28,18 @@ export class ProductService {
 
   async getProducts(): Promise<Product[]> {
     try {
-      const response = await fetch(this.apiUrl);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data: Product[] = await response.json();
+      const data = await firstValueFrom(this.http.get<Product[]>(this.apiUrl));
       this.products.set(data);
       return data;
     } catch (error) {
       this.handleError(error);
-      throw error; // Re-throw to propagate the error
+      throw error;
     }
   }
 
   async getProduct(id: number): Promise<Product> {
     try {
-      const response = await fetch(`${this.apiUrl}${id}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return await response.json();
+      return await firstValueFrom(this.http.get<Product>(`${this.apiUrl}${id}`));
     } catch (error) {
       this.handleError(error);
       throw error;
@@ -59,18 +48,7 @@ export class ProductService {
 
   async addProduct(product: Product): Promise<Product> {
     try {
-      const response = await fetch(this.apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.authService.getToken()}`
-        },
-        body: JSON.stringify(product)
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const newProduct: Product = await response.json();
+      const newProduct = await firstValueFrom(this.http.post<Product>(this.apiUrl, product));
       this.products.update(products => [...products, newProduct]);
       return newProduct;
     } catch (error) {
@@ -81,18 +59,7 @@ export class ProductService {
 
   async updateProduct(product: Product): Promise<Product> {
     try {
-      const response = await fetch(`${this.apiUrl}${product.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.authService.getToken()}`
-        },
-        body: JSON.stringify(product)
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const updatedProduct: Product = await response.json();
+      const updatedProduct = await firstValueFrom(this.http.put<Product>(`${this.apiUrl}${product.id}`, product));
       this.products.update(products =>
         products.map(p => (p.id === updatedProduct.id ? updatedProduct : p))
       );
@@ -105,15 +72,7 @@ export class ProductService {
 
   async deleteProduct(id: number): Promise<void> {
     try {
-      const response = await fetch(`${this.apiUrl}${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${this.authService.getToken()}`
-        }
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      await firstValueFrom(this.http.delete<void>(`${this.apiUrl}${id}`));
       this.products.update(products => products.filter(p => p.id !== id));
     } catch (error) {
       this.handleError(error);
