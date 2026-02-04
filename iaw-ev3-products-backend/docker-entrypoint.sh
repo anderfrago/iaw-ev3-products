@@ -8,4 +8,7 @@ done
 php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 php bin/console app:generate-products 10 --no-interaction
 
+php bin/console app:create-user
+php bin/console app:generate-products
+
 apache2-foreground

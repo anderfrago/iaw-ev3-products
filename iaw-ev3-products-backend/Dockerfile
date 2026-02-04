@@ -17,6 +17,8 @@ RUN echo '<Directory /var/www/html>\n\
     \n\
     <IfModule mod_rewrite.c>\n\
     RewriteEngine On\n\
+    RewriteCond %{HTTP:Authorization} ^(.*)\n\
+    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]\n\
     RewriteCond %{REQUEST_FILENAME} !-f\n\
     RewriteRule ^(.*)$ index.php [QSA,L]\n\
     </IfModule>\n\
